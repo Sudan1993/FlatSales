@@ -17,7 +17,7 @@ exports.customer_create = function (req, res) {
                         customername: req.body.customername,
                         status: req.body.status,
                         customercontactno: req.body.customercontactno,
-                        agent: agent                
+                        agent: agentid                
                     }
                 );
                 console.log("customer ===== ", customer);
@@ -59,7 +59,7 @@ exports.customers_list_all = function(req, res){
 
 exports.customers_list = function(req, res){
     //var agentid = req.id;
-    Customer.find({}).
+    Customer.find({}).populate('agent').
       exec(function (err, customers) {
         if (err) return handleError(err);
         console.log(customers);
@@ -68,7 +68,8 @@ exports.customers_list = function(req, res){
 }
 
 exports.customer_details = function (req, res) {
-    Customer.findById(req.params.id, function (err, customer) {
+    Customer.findById(req.params.id).populate('agent').
+     exec(function (err, customer) {
         if (err) return err;
         res.send(customer);
     })

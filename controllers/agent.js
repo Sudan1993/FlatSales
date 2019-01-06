@@ -22,18 +22,22 @@ exports.agent_create = function (req, res) {
 };
 
 exports.agent_lists = function(req, res){
-    console.log("inside agent lists:::" + req.agentname);
-    Agent.find({}, function(err, agents) {
-        //console.log(agents);
-        if(err) return next(err);
-    var agentMap = {};
+    Agent.find({}).populate('customers').
+      exec(function (err, agents) {
+        if (err) return handleError(err);
+        console.log(agents);
+        res.send(agents);
+      });
+  //   Agent.find({}, function(err, agents) {
+  //       if(err) return next(err);
+  //   var agentMap = {};
 
-    agents.forEach(function(agent) {
-      agentMap[agent.id] = agent;
-    });
-    //console.log(agentMap);
-    res.send(agentMap);  
-  });
+  //   agents.forEach(function(agent) {
+  //     agentMap[agent.id] = agent;
+  //   });
+  //   //console.log(agentMap);
+  //   res.send(agentMap);  
+  // });
 };
 
 exports.findById = function(agentid) {
